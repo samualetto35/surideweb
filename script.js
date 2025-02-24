@@ -30,12 +30,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 
-// 📌 SHEET'TEKİ HYPERLINK FORMATINI DÜZELTİYOR
+// 📌 **SHEETS HYPERLINK FORMATINI DOĞRU OKUYOR**
 function extractURL(cellValue) {
     if (!cellValue) return ''; // Boşsa direkt boş döndür
-    if (cellValue.startsWith("=HYPERLINK(")) {
-        let match = cellValue.match(/"([^"]+)"/); // URL'yi ayıklıyoruz
-        return match ? match[1] : '';
+    const hyperlinkPattern = /=HYPERLINK\("([^"]+)",\s*"([^"]+)"\)/;
+    const match = cellValue.match(hyperlinkPattern);
+
+    if (match && match[1]) {
+        return match[1]; // Sadece URL kısmını al
     }
     return cellValue; // Normal bir URL ise direkt döndür
 }
@@ -58,8 +60,8 @@ function displayRidesFromArray(rides) {
             displayContact = '<p><em>İletişim bilgisi belirtilmemiş</em></p>';
         }
 
-        // İletişim linki kontrolü
-        const contactButton = ride.link 
+        // **Eğer link boşsa, buton hiç görünmeyecek**
+        const contactButton = ride.link
             ? `<a href="${ride.link}" class="contact-btn" target="_blank">İletişim Bilgini Gönder</a>`
             : '';
 
